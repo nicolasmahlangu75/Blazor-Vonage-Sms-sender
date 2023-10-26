@@ -1,0 +1,46 @@
+﻿@page "/"
+@using BlazorSmsApp.Data
+@inject SmsService _smsService
+
+<h1>Welcome to the Blazor SMS Sender.</h1>
+<hr />
+@if (MessageId!=null)
+{
+	@MessageId;
+}
+<hr/>
+<EditForm Model="@SmsObj">
+	<div class="row">
+		<div class="col-10">
+				<div class="form-group">
+					<label>To Number:</label>
+					<input type="text" class="form-control" @bind-value="SmsObj.RecipientNumber"/>
+				</div>
+		</div>
+		
+		<div class="col-10">
+			<div class="form-group">
+				<label>SMS Text:</label>
+				<input type="text" class="form-control" @bind-value="SmsObj.TextMessage" />
+			</div>
+		</div>
+		<hr />
+
+		<div class="col-10">
+			<button class="btn btn-primary" @onclick="SendSMSClick">Send SMS</button>
+		</div>
+
+	</div>
+</EditForm>
+
+@code{
+	public SmsModel SmsObj = new SmsModel();
+	public string MessageId;
+
+	public void SendSMSClick()
+	{
+		var response = _smsService.SendSms(SmsObj);
+		MessageId = response.Messages[0].MessageId;
+	}
+
+}
